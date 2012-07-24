@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!-- Transaction Manager -->
+	<bean id="workflow-archive.transactionManager" class="fr.paris.lutece.portal.service.database.DAOUtilTransactionManager"
+		p:pluginName="workflow-archive" />
+
+	<!-- DAO -->
+	<bean id="workflow-archive.taskArchiveConfigDAO"  class="fr.paris.lutece.plugins.workflow.modules.archive.business.TaskArchiveConfigDAO"/>
+<!--	<bean id="workflow-archive.recordFieldHistoryDAO"  class="fr.paris.lutece.plugins.workflow.modules.archive.business.RecordFieldHistoryDAO"/>-->
+<!--	<bean id="workflow-archive.fileHistoryDAO"  class="fr.paris.lutece.plugins.workflow.modules.archive.business.FileHistoryDAO"/>-->
+<!--	<bean id="workflow-archive.physicalFileHistoryDAO"  class="fr.paris.lutece.plugins.workflow.modules.archive.business.PhysicalFileHistoryDAO"/>-->
+
+	<!-- Services -->
+<!--	<bean id="workflow-archive.fileHistoryService" class="fr.paris.lutece.plugins.workflow.modules.archive.service.FileHistoryService" />-->
+<!--	<bean id="workflow-archive.physicalFileHistoryService" class="fr.paris.lutece.plugins.workflow.modules.archive.service.PhysicalFileHistoryService" />-->
+<!--	<bean id="workflow-archive.recordFieldHistoryService" class="fr.paris.lutece.plugins.workflow.modules.archive.service.RecordFieldHistoryService" />-->
+	<bean id="workflow-archive.taskArchiveConfigService" class="fr.paris.lutece.plugins.workflow.modules.archive.service.TaskArchiveConfigService"
+		p:taskConfigDAO-ref="workflow-archive.taskArchiveConfigDAO" />
+	
+	<!-- Task -->
+	<bean id="workflow-archive.taskTypeArchive" class="fr.paris.lutece.plugins.workflowcore.business.task.TaskType"
+		p:key="taskArchive"
+		p:titleI18nKey="module.workflow.archive.task_archive_title"
+		p:beanName="workflow-archive.taskArchive"
+		p:configBeanName="workflow-archive.taskArchiveConfig"
+		p:configRequired="true"
+		p:formTaskRequired="false"
+		p:taskForAutomaticAction="true" />
+	<bean id="workflow-archive.taskArchive" class="fr.paris.lutece.plugins.workflow.modules.archive.service.TaskArchive" scope="prototype" />
+	<bean id="workflow-archive.taskArchiveConfig" class="fr.paris.lutece.plugins.workflow.modules.archive.business.TaskArchiveConfig" scope="prototype" />
+	<bean id="workflow-archive.archiveTaskComponent" class="fr.paris.lutece.plugins.workflow.modules.archive.web.ArchiveTaskComponent"
+		p:taskType-ref="workflow-archive.taskTypeArchive"
+		p:taskConfigService-ref="workflow-archive.taskArchiveConfigService" />
+		
+	<bean id="workflow-archive.requestAuthenticatorForUrl" class="fr.paris.lutece.util.signrequest.RequestHashAuthenticator" >
+        <property name="hashService" ref="workflow-archive.hashService" />
+        <property name="signatureElements" > 
+            <list>
+            	<value>id_directory</value>
+            	<value>id_directory_record</value>
+            </list>
+        </property>
+        <property name="privateKey">
+            <value>change me</value>
+        </property>
+    </bean>
+</beans>
