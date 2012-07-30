@@ -1,3 +1,36 @@
+/*
+ * Copyright (c) 2002-2012, Mairie de Paris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice
+ *     and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright notice
+ *     and the following disclaimer in the documentation and/or other materials
+ *     provided with the distribution.
+ *
+ *  3. Neither the name of 'Mairie de Paris' nor 'Lutece' nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * License 1.0
+ */
 package fr.paris.lutece.plugins.workflow.modules.archive.web;
 
 import fr.paris.lutece.plugins.directory.business.DirectoryHome;
@@ -6,10 +39,11 @@ import fr.paris.lutece.plugins.directory.business.EntryHome;
 import fr.paris.lutece.plugins.directory.business.IEntry;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.ConfigProducer;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.ConfigProducerService;
+import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.DirectoryPDFProducerPlugin;
+import fr.paris.lutece.plugins.directory.service.DirectoryPlugin;
 import fr.paris.lutece.plugins.directory.utils.DirectoryUtils;
 import fr.paris.lutece.plugins.workflow.modules.archive.business.TaskArchiveConfig;
 import fr.paris.lutece.plugins.workflow.modules.archive.service.TaskArchiveConfigService;
-import fr.paris.lutece.plugins.workflow.modules.archive.service.WorkflowArchivePlugin;
 import fr.paris.lutece.plugins.workflow.utils.WorkflowUtils;
 import fr.paris.lutece.plugins.workflow.web.task.AbstractTaskComponent;
 import fr.paris.lutece.plugins.workflowcore.service.task.ITask;
@@ -33,6 +67,10 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
+/**
+ * Archive task component
+ * 
+ */
 public class ArchiveTaskComponent extends AbstractTaskComponent
 {
 	// TEMPLATES
@@ -43,13 +81,10 @@ public class ArchiveTaskComponent extends AbstractTaskComponent
 	private static final String MARK_DIRECTORY_LIST = "list_directory";
 	private static final String MARK_DIRECTORY_ENTRY_LIST = "list_entry_directory";
 	private static final String MARK_PDFPRODUCER_CONFIG_LIST = "list_pdfproducer_config";
-	// private static final String MARK_LIST_RECORD_FIELD = "list_record_field";
-	// private static final String MARK_ENTRY_DIRECTORY = "entry_directory";
-	// private static final String MARK_LOCALE = "locale";
-	// private static final String MARK_MAP_ID_ENTRY_LIST_RECORD_FIELD = "map_id_entry_list_record_field";
 
 	// MESSAGES
 	private static final String MESSAGE_MANDATORY_FIELD = "module.workflow.archive.message.mandatory.field";
+	private static final String MESSAGE_ARCHIVE_GENERATED = "module.workflow.archive.message.archiveGenerated";
 
 	// PARAMETERS
 	private static final String PARAMETER_APPLY = "apply";
@@ -68,9 +103,9 @@ public class ArchiveTaskComponent extends AbstractTaskComponent
 	private static final String TYPE_CONFIG_PDF = "PDF";
 
 	@Autowired
-	TaskArchiveConfigService _taskArchiveConfigService;
+	private TaskArchiveConfigService _taskArchiveConfigService;
 	@Autowired
-	ConfigProducerService _configProducerService;
+	private ConfigProducerService _configProducerService;
 
 	/**
 	 * {@inheritDoc}
@@ -91,9 +126,10 @@ public class ArchiveTaskComponent extends AbstractTaskComponent
 		Map<String, Object> model = new HashMap<String, Object>( );
 		ReferenceList entryList = null;
 
-		Plugin plugin = PluginService.getPlugin( WorkflowArchivePlugin.PLUGIN_NAME );
+		Plugin pluginDirectory = PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME );
+		Plugin pluginDirectoryPdfProducer = PluginService.getPlugin( DirectoryPDFProducerPlugin.PLUGIN_NAME );
 
-		ReferenceList directoryList = DirectoryHome.getDirectoryList( plugin );
+		ReferenceList directoryList = DirectoryHome.getDirectoryList( pluginDirectory );
 		ReferenceList taskReferenceListDirectory = new ReferenceList( );
 		taskReferenceListDirectory.addItem( DirectoryUtils.CONSTANT_ID_NULL, "" );
 		ReferenceList configProducerList = new ReferenceList( );
@@ -108,13 +144,13 @@ public class ArchiveTaskComponent extends AbstractTaskComponent
 
 			entryList = new ReferenceList( );
 
-			for ( IEntry entry : EntryHome.getEntryList( entryFilter, plugin ) )
+			for ( IEntry entry : EntryHome.getEntryList( entryFilter, pluginDirectory ) )
 			{
-				entryList.addItem( entry.getPosition( ), String.valueOf( entry.getPosition( ) ) + " (" + I18nService.getLocalizedString( LABEL_REFERENCE_DIRECTORY, locale ) + entry.getTitle( )
-						+ " - " + I18nService.getLocalizedString( entry.getEntryType( ).getTitleI18nKey( ), locale ) + ")" );
+				entryList.addItem( entry.getPosition( ), String.valueOf( entry.getPosition( ) ) + " (" + I18nService.getLocalizedString( LABEL_REFERENCE_DIRECTORY, locale ) + " : " + entry.getTitle( )
+						+ ")" );
 			}
 
-			for ( ConfigProducer configProducer : _configProducerService.loadListProducerConfig( plugin, config.getIdDirectory( ), TYPE_CONFIG_PDF ) )
+			for ( ConfigProducer configProducer : _configProducerService.loadListProducerConfig( pluginDirectoryPdfProducer, config.getIdDirectory( ), TYPE_CONFIG_PDF ) )
 			{
 				configProducerList.addItem( configProducer.getIdProducerConfig( ), configProducer.getName( ) );
 			}
@@ -137,7 +173,6 @@ public class ArchiveTaskComponent extends AbstractTaskComponent
 		{
 			config = new TaskArchiveConfig( );
 			config.setIdDirectory( DirectoryUtils.CONSTANT_ID_NULL );
-			// config.setPositionEntryDirectory( DirectoryUtils.CONSTANT_ID_NULL );
 		}
 
 		model.put( MARK_CONFIG, config );
@@ -165,7 +200,7 @@ public class ArchiveTaskComponent extends AbstractTaskComponent
 	@Override
 	public String getDisplayTaskInformation( int nIdHistory, HttpServletRequest request, Locale locale, ITask task )
 	{
-		return null;
+		return I18nService.getLocalizedString( MESSAGE_ARCHIVE_GENERATED, locale );
 	}
 
 	/**

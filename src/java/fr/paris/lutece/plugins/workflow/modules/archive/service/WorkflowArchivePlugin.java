@@ -40,7 +40,7 @@ import fr.paris.lutece.portal.service.plugin.PluginService;
 
 /**
  * 
- * BourseRecherchePlugin
+ * WorkflowArchivePlugin
  * 
  */
 public class WorkflowArchivePlugin extends PluginDefaultImplementation

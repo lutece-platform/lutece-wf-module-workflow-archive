@@ -20,12 +20,31 @@
 <!--	<bean id="workflow-archive.fileHistoryDAO"  class="fr.paris.lutece.plugins.workflow.modules.archive.business.FileHistoryDAO"/>-->
 <!--	<bean id="workflow-archive.physicalFileHistoryDAO"  class="fr.paris.lutece.plugins.workflow.modules.archive.business.PhysicalFileHistoryDAO"/>-->
 
+	<bean id="workflow-archive.hashService" class="fr.paris.lutece.util.signrequest.security.Sha1HashService" />
+	<bean id="workflow-archive.requestAuthenticatorForUrl" class="fr.paris.lutece.util.signrequest.RequestHashAuthenticator" >
+        <property name="hashService" ref="workflow-archive.hashService" />
+        <property name="signatureElements" > 
+            <list>
+            	<value>id_directory</value>
+            	<value>id_record</value>
+            	<value>id_config_producer</value>
+            </list>
+        </property>
+        <property name="privateKey">
+            <value>123456789</value>
+        </property>
+    </bean>
+
+
 	<!-- Services -->
 <!--	<bean id="workflow-archive.fileHistoryService" class="fr.paris.lutece.plugins.workflow.modules.archive.service.FileHistoryService" />-->
 <!--	<bean id="workflow-archive.physicalFileHistoryService" class="fr.paris.lutece.plugins.workflow.modules.archive.service.PhysicalFileHistoryService" />-->
 <!--	<bean id="workflow-archive.recordFieldHistoryService" class="fr.paris.lutece.plugins.workflow.modules.archive.service.RecordFieldHistoryService" />-->
 	<bean id="workflow-archive.taskArchiveConfigService" class="fr.paris.lutece.plugins.workflow.modules.archive.service.TaskArchiveConfigService"
 		p:taskConfigDAO-ref="workflow-archive.taskArchiveConfigDAO" />
+<!--	<bean id="workflow-archive.downloadArchive" class="fr.paris.lutece.plugins.workflow.modules.archive.web.DownloadArchive" >-->
+<!--		<property name="authenticator" ref="workflow-archive.requestAuthenticatorForUrl" />-->
+<!--	</bean>-->
 	
 	<!-- Task -->
 	<bean id="workflow-archive.taskTypeArchive" class="fr.paris.lutece.plugins.workflowcore.business.task.TaskType"
@@ -36,22 +55,12 @@
 		p:configRequired="true"
 		p:formTaskRequired="false"
 		p:taskForAutomaticAction="true" />
-	<bean id="workflow-archive.taskArchive" class="fr.paris.lutece.plugins.workflow.modules.archive.service.TaskArchive" scope="prototype" />
+	<bean id="workflow-archive.taskArchive" class="fr.paris.lutece.plugins.workflow.modules.archive.service.TaskArchive" scope="prototype" >
+		<property name="authenticator" ref="workflow-archive.requestAuthenticatorForUrl" />
+	</bean>
 	<bean id="workflow-archive.taskArchiveConfig" class="fr.paris.lutece.plugins.workflow.modules.archive.business.TaskArchiveConfig" scope="prototype" />
 	<bean id="workflow-archive.archiveTaskComponent" class="fr.paris.lutece.plugins.workflow.modules.archive.web.ArchiveTaskComponent"
 		p:taskType-ref="workflow-archive.taskTypeArchive"
 		p:taskConfigService-ref="workflow-archive.taskArchiveConfigService" />
 		
-	<bean id="workflow-archive.requestAuthenticatorForUrl" class="fr.paris.lutece.util.signrequest.RequestHashAuthenticator" >
-        <property name="hashService" ref="workflow-archive.hashService" />
-        <property name="signatureElements" > 
-            <list>
-            	<value>id_directory</value>
-            	<value>id_directory_record</value>
-            </list>
-        </property>
-        <property name="privateKey">
-            <value>change me</value>
-        </property>
-    </bean>
 </beans>
