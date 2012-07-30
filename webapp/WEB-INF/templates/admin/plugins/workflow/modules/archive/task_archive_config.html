@@ -1,0 +1,21 @@
+<div>
+	<h2> #i18n{module.workflow.archive.task_archive_config.title}</h2>
+	<p>
+		<label for="id_directory">#i18n{module.workflow.archive.task_archive_config.label_task_directory} * :</label>
+		<@combo name="id_directory"  items=list_directory default_value=config.idDirectory />
+		<input class="button" type="submit" name="apply" value="#i18n{module.workflow.archive.task_archive_config.button.apply}" />
+	</p>
+	<#if list_entry_directory?exists>
+		 <p>
+		    <label for="id_entry_directory">#i18n{module.workflow.archive.task_archive_config.label_task_entry_directory} * :</label>
+			 <@combo name="id_entry_directory"  items=list_entry_directory default_value=config.idEntryDirectory />&nbsp;
+		 </p>
+	</#if>
+	<#if list_pdfproducer_config?exists>
+		<p>
+			<label for="id_pdfproducer_config">#i18n{module.workflow.archive.task_archive_config.label_task_pdfproducer_config} * :</label>
+			<@combo name="id_pdfproducer_config"  items=list_pdfproducer_config default_value=config.idPDFProducerConfig />&nbsp;
+		</p>
+	</#if>
+	
+</div>
