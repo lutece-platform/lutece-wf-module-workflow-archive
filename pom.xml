@@ -10,7 +10,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>module-workflow-archive</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.1.0</version>
     <name>Workflow archive module</name>
 
     <repositories>
@@ -75,6 +75,7 @@
         <connection>scm:git:https://github.com/lutece-platform/lutece-wf-module-workflow-archive.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-wf-module-workflow-archive.git</developerConnection>
         <url>https://github.com/lutece-platform/lutece-wf-module-workflow-archive.git</url>
-    </scm>
+      <tag>lutece-wf-module-workflow-archive-1.1.0</tag>
+  </scm>
     
 </project>
