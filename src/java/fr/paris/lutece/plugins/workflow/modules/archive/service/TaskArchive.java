@@ -273,7 +273,7 @@ public class TaskArchive extends Task
 			try
 			{
 				os = new FileOutputStream( pdfFile );
-				PDFUtils.doCreateDocumentPDF( request, strPDFFileName, os, resourceHistory.getIdResource( ), listIdEntryConfig );
+				PDFUtils.doCreateDocumentPDF( request, strPDFFileName, os, resourceHistory.getIdResource( ), listIdEntryConfig , Boolean.FALSE );
 			}
 			catch ( FileNotFoundException e )
 			{
