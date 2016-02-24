@@ -1,27 +1,31 @@
 <fieldset>
 	<legend>#i18n{module.workflow.archive.task_archive_config.title}</legend>
-	<div class="control-group">
-		<label class="control-label" for="id_directory">#i18n{module.workflow.archive.task_archive_config.label_task_directory} * :</label>
-		<div class="controls">
-			<@combo name="id_directory"  items=list_directory default_value=config.idDirectory />
-			<button class="btn btn-primary btn-small" type="submit" name="apply" >
-				<i class="icon-ok icon-white"></i>&nbsp;#i18n{module.workflow.archive.task_archive_config.button.apply}
-			</button>
+	<div class="form-group">
+		<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="id_directory">#i18n{module.workflow.archive.task_archive_config.label_task_directory} * :</label>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+			<div class="input-group">
+				<@comboWithParams name="id_directory" items=list_directory default_value="config.idDirectory" additionalParameters="class=\"form-control input-sm\"" />
+				<span class="input-group-btn">
+					<button class="btn btn-primary btn-sm" type="submit" name="apply" >
+						<i class="glyphicon glyphicon-ok"></i><span class="hidden">&nbsp;#i18n{module.workflow.archive.task_archive_config.button.apply}</span>
+					</button>
+				</span>
+			</div>
 		</div>
 	</div>
 	<#if list_entry_directory?exists>
-		<div class="control-group">
-		<label class="control-label" for="id_entry_directory">#i18n{module.workflow.archive.task_archive_config.label_task_entry_directory} * :</label>
-			<div class="controls"> 
-				<@combo name="id_entry_directory"  items=list_entry_directory default_value=config.idEntryDirectory />&nbsp;
+		<div class="form-group">
+		<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="id_entry_directory">#i18n{module.workflow.archive.task_archive_config.label_task_entry_directory} * :</label>
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> 
+				<@comboWithParams name="id_entry_directory"  items=list_entry_directory default_value="config.idEntryDirectory" additionalParameters="class=\"form-control input-sm\"" />
 		 	</div>
 		</div>
 	</#if>
 	<#if list_pdfproducer_config?exists>
-		<div class="control-group">
-		<label class="control-label" for="id_pdfproducer_config">#i18n{module.workflow.archive.task_archive_config.label_task_pdfproducer_config} * :</label>
-			<div class="controls">
-			<@combo name="id_pdfproducer_config"  items=list_pdfproducer_config default_value=config.idPDFProducerConfig />&nbsp;
+		<div class="form-group">
+		<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="id_pdfproducer_config">#i18n{module.workflow.archive.task_archive_config.label_task_pdfproducer_config} * :</label>
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+			<@comboWithParams name="id_pdfproducer_config"  items=list_pdfproducer_config default_value="config.idPDFProducerConfig" additionalParameters="class=\"form-control input-sm\"" />&nbsp;
 			</div>
 		</div>
 	</#if>
