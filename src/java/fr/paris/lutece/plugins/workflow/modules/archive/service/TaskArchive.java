@@ -65,7 +65,7 @@ import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
-import fr.paris.lutece.util.signrequest.AbstractAuthenticator;
+import fr.paris.lutece.util.signrequest.AbstractPrivateKeyAuthenticator;
 import fr.paris.lutece.util.string.StringUtil;
 import fr.paris.lutece.util.url.UrlItem;
 
@@ -122,13 +122,13 @@ public class TaskArchive extends Task
 	private TaskArchiveConfigService _taskArchiveConfigService;
 	@Autowired
 	private ConfigProducerService _configProducerService;
-	private AbstractAuthenticator _authenticator;
+	private AbstractPrivateKeyAuthenticator _authenticator;
 
 	/**
 	 * Set the authenticator
 	 * @param authenticator The authenticator
 	 */
-	public void setAuthenticator( AbstractAuthenticator authenticator )
+	public void setAuthenticator( AbstractPrivateKeyAuthenticator authenticator )
 	{
 		_authenticator = authenticator;
 	}
